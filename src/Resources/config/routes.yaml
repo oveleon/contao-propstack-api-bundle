@@ -1,0 +1,5 @@
+propstack_api:
+    resource: '@ContaoPropstackApiBundle/Controller/Api'
+    type: annotation
+    defaults:
+        _format: json

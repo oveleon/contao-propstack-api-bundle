@@ -1,0 +1,19 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_propstack_settings.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="tl_propstack_settings.api_authentication_legend">
+        <source>API access data</source>
+        <target>API Zugangsdaten</target>
+      </trans-unit>
+
+      <trans-unit id="tl_propstack_settings.propstackApiKey.0">
+        <source>API-Key</source>
+        <target>API-Schlüssel</target>
+      </trans-unit>
+      <trans-unit id="tl_propstack_settings.propstackApiKey.1">
+        <source>Specify the api key of your API interface here</source>
+        <target>Geben Sie hier den API-Schlüssel Ihrer API-Schnittstelle an</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    Oveleon\ContaoPropstackApiBundle\:
+        resource: '../../'
+        exclude: '../../{Model,DependencyInjection,Resources}'
+
+    Oveleon\ContaoPropstackApiBundle\EventListener\ApiExceptionSubscriber:
+        arguments: []
+        tags:
+            - { name: kernel.event_subscriber }

@@ -1,0 +1,52 @@
+{
+  "name":"oveleon/contao-propstack-api-bundle",
+  "type":"contao-bundle",
+  "description":"Propstack API Controller for Contao.",
+  "keywords":["contao","propstack","api"],
+  "homepage":"https://oveleon.de/",
+  "license":"GPL-3.0-or-later",
+  "authors":[
+    {
+      "name":"Oveleon",
+      "homepage":"https://oveleon.de/",
+      "role":"Developer"
+    },
+    {
+      "name":"Daniele Sciannimanica",
+      "homepage":"https://github.com/doishub",
+      "role":"Developer"
+    }
+  ],
+  "require":{
+    "php":"^7.4 || ^8.0",
+    "contao/core-bundle":"^4.9"
+  },
+  "require-dev": {
+    "contao/manager-plugin": "^2.0"
+  },
+  "conflict": {
+    "contao/core": "*",
+    "contao/core-bundle": "4.4.1",
+    "contao/manager-plugin": "<2.0 || >=3.0"
+  },
+  "autoload":{
+    "psr-4": {
+      "Oveleon\\ContaoPropstackApiBundle\\": "src/"
+    },
+    "classmap": [
+      "src/Resources/contao/"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/config/",
+      "src/Resources/contao/dca/",
+      "src/Resources/contao/languages/",
+      "src/Resources/contao/templates/"
+    ]
+  },
+  "extra":{
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    },
+    "contao-manager-plugin": "Oveleon\\ContaoPropstackApiBundle\\ContaoManager\\Plugin"
+  }
+}

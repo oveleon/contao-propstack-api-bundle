@@ -1,0 +1,26 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="MOD.propstack">
+        <source>Propstack</source>
+        <target>Propstack</target>
+      </trans-unit>
+      <trans-unit id="MOD.propstack_auth.0">
+        <source>Authorization</source>
+        <target>Autorisierung</target>
+      </trans-unit>
+      <trans-unit id="MOD.propstack_auth.1">
+        <source>Edit authorization</source>
+        <target>Autorisierung bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="MOD.propstack_settings.0">
+        <source>Settings</source>
+        <target>Einstellung</target>
+      </trans-unit>
+      <trans-unit id="MOD.propstack_settings.1">
+        <source>Edit Propstack config</source>
+        <target>Die Propstack-Konfiguration bearbeiten</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
