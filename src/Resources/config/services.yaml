@@ -6,7 +6,7 @@ services:
 
     Oveleon\ContaoPropstackApiBundle\:
         resource: '../../'
-        exclude: '../../{Model,DependencyInjection,Resources}'
+        exclude: '../../{Model,DependencyInjection,Resources,**/Options}'
 
     Oveleon\ContaoPropstackApiBundle\EventListener\ApiExceptionSubscriber:
         arguments: []

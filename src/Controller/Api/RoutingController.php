@@ -5,6 +5,7 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Api;
 use Contao\System;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitStateController;
 use Oveleon\ContaoPropstackApiBundle\Exception\ApiAccessDeniedException;
 use Oveleon\ContaoPropstackApiBundle\Exception\ApiMethodDeniedException;
 use Oveleon\ContaoPropstackApiBundle\Security\Api\Authenticator;
@@ -93,6 +94,26 @@ class RoutingController
                 }
 
                 return $objUnits->read($parameters);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Property Statuses
+     *
+     * @Route("/property_status", name="property_status")
+     */
+    public function propertyStatuses(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $objUnits = new UnitStateController();
+        $objUnits->setFormat(PropstackController::FORMAT_JSON);
+
+        if(PropstackController::METHOD_READ === $request->getMethod())
+        {
+            return $objUnits->read();
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
