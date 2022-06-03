@@ -5,7 +5,7 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Unit;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 
 /**
- * Handle unit (property status) calls
+ * Handle unit (property states) calls
  *
  * @link https://docs.propstack.de/reference/objekte
  *
@@ -16,7 +16,7 @@ class UnitStateController extends PropstackController
     protected string $route = 'property_statuses';
 
     /**
-     * Read units
+     * Read property states
      */
     public function read()
     {
