@@ -21,14 +21,6 @@ class RoutingController
      */
     const BASE_URL = '/api/propstack';
 
-    /**
-     * Method constants
-     */
-    const METHOD_GET = 'GET';
-    const METHOD_POST = 'POST';
-    const METHOD_PUT = 'PUT';
-    const METHOD_DELETE = 'DELETE';
-
     protected RequestStack $requestStack;
 
     public function __construct(Authenticator $authenticator, RequestStack $requestStack)
@@ -80,17 +72,21 @@ class RoutingController
 
         switch($request->getMethod())
         {
-            case self::METHOD_POST:
+            case PropstackController::METHOD_CREATE:
                 // Create
-            case self::METHOD_PUT:
+                return $objUnits->create($parameters);
+
+            case PropstackController::METHOD_EDIT:
                 // Edit
-            case self::METHOD_DELETE:
+
+            case PropstackController::METHOD_DELETE:
                 // Delete
-            case self::METHOD_GET:
+
+            case PropstackController::METHOD_READ:
                 // Read
-                if(null === $id)
+                if(null !== $id)
                 {
-                    return $objUnits->readById($id, $parameters);
+                    return $objUnits->readOne($id);
                 }
 
                 return $objUnits->read($parameters);

@@ -2,7 +2,7 @@
 
 namespace Oveleon\ContaoPropstackApiBundle\EventListener;
 
-use ContaoEstateManager\EstateManager\Exception\ApiBaseException;
+use Oveleon\ContaoPropstackApiBundle\Exception\ApiBaseException;
 use Oveleon\ContaoPropstackApiBundle\Controller\Api\RoutingController;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

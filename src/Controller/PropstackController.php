@@ -4,7 +4,10 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller;
 
 use Contao\Config;
 use Oveleon\ContaoPropstackApiBundle\Exception\ApiAccessDeniedException;
+use Oveleon\ContaoPropstackApiBundle\Exception\ApiConnectionException;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * Propstack abstract controller.
@@ -33,15 +36,18 @@ abstract class PropstackController
     protected string $route;
     protected string $version = 'v1';
 
-    protected const TYPE_READ = 0;
-    protected const TYPE_CREATE = 1;
-    protected const TYPE_EDIT = 2;
-    protected const TYPE_DELETE = 3;
+    public const METHOD_READ   = 'GET';
+    public const METHOD_CREATE = 'POST';
+    public const METHOD_EDIT   = 'PUT';
+    public const METHOD_DELETE = 'DELETE';
 
     public const FORMAT_JSON = 0;
     public const FORMAT_ARRAY = 1;
 
-    private ?array $response;
+    private ?ResponseInterface $response;
+
+    private ?array $routePaths = null;
+    private ?array $routeQueries = null;
 
     /**
      * Set API key
@@ -49,7 +55,7 @@ abstract class PropstackController
     public function __construct()
     {
         // Set default response format
-        $this->format = self::FORMAT_ARRAY;
+        $this->setFormat(self::FORMAT_ARRAY);
 
         // Set key from config
         $this->key = Config::get('propstackApiKey') ?: null;
@@ -82,35 +88,53 @@ abstract class PropstackController
     /**
      * Call API
      */
-    protected function call(?array $parameters, int $type): ?array
+    protected function call(?array $parameters, string $method): void
     {
-        $this->response = null;
-
         if(null === $this->key)
         {
             throw new ApiAccessDeniedException('No valid Propstack API key');
         }
 
-        switch ($type)
+        $this->response = null;
+
+        switch ($method)
         {
-            case self::TYPE_READ:   return $this->response = $this->read($parameters);
-            case self::TYPE_CREATE: return $this->response = $this->create($parameters);
-            case self::TYPE_EDIT:   return $this->response = $this->edit($parameters);
-            case self::TYPE_DELETE: return $this->response = $this->delete($parameters);
+            case self::METHOD_READ:   $this->response = $this->read($parameters); break;
+            case self::METHOD_CREATE: $this->response = $this->create($parameters); break;
+            case self::METHOD_EDIT:   $this->response = $this->edit($parameters); break;
+            case self::METHOD_DELETE: $this->response = $this->delete($parameters); break;
         }
 
-        return $this->response;
+        // Reset route paths and queries
+        $this->routePaths = null;
+        $this->routeQueries = null;
     }
 
     /**
-     * Returns the data of the last call or the passed response
+     * Returns the data of the last call
      */
-    protected function getResponse(?array $response = null)
+    protected function getResponse()
     {
-        if(null === $response)
+        if(null === $this->response)
         {
-            $response = $this->response;
+            throw new ApiAccessDeniedException('There is no response, please execute the `call` method first');
         }
+
+        if(!in_array($this->response->getStatusCode(), [200, 201]))
+        {
+            throw new ApiConnectionException('The call was not accepted by Propstack, please check the passed parameters');
+        }
+
+        // Get content as array
+        $content = $this->response->toArray();
+
+        // Create response array
+        $response = [
+            'meta' => [
+                'absolute' => isset($content['id']) ? 1 : count($content)
+            ],
+            'data' => $content
+        ];
 
         switch ($this->format)
         {
@@ -122,21 +146,49 @@ abstract class PropstackController
     }
 
     /**
+     * Temporarily adds a route path, paths are reset after executing `call`
+     */
+    protected function addRoutePath(string $path): void
+    {
+        $this->routePaths[] = $path;
+    }
+
+    /**
+     * Temporarily adds a route query, queries are reset after executing `call`
+     */
+    protected function addRouteQuery(string $key, string $value): void
+    {
+        $this->routeQueries[ $key ] = $value;
+    }
+
+    /**
      * Read properties
      */
-    private function read(?array $parameters): ?array
+    private function read(?array $parameters): ResponseInterface
     {
-        // GET
-        return [];
+        return (HttpClient::create())->request(
+            self::METHOD_READ,
+            $this->generateRoute(),
+            [
+                'headers' => $this->getHeaders(),
+                'query'   => $parameters
+            ]
+        );
     }
 
     /**
      * Create properties
      */
-    private function create(?array $parameters): ?array
+    private function create(?array $parameters): ResponseInterface
     {
-        // POST
-        return [];
+        return (HttpClient::create())->request(
+            self::METHOD_CREATE,
+            $this->generateRoute(),
+            [
+                'headers' => $this->getHeaders(),
+                'json'    => $parameters
+            ]
+        );
     }
 
     /**
@@ -158,10 +210,37 @@ abstract class PropstackController
     }
 
     /**
+     * Returns the request headers
+     */
+    private function getHeaders(): array
+    {
+        return [
+            'X-API-KEY' => $this->key
+        ];
+    }
+
+    /**
      * Returns the entire route to be called
      */
     private function generateRoute(): string
     {
-        return self::BASE_URL . '/' .  $this->version . '/' . $this->route;
+        $query = '';
+        $fragments = [
+            self::BASE_URL,
+            $this->version,
+            $this->route
+        ];
+
+        if(null !== $this->routePaths)
+        {
+            $fragments = array_merge($fragments, $this->routePaths);
+        }
+
+        if(null !== $this->routeQueries)
+        {
+            $query = '?' . http_build_query($this->routeQueries);
+        }
+
+        return implode('/', $fragments) . $query;
     }
 }
