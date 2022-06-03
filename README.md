@@ -11,7 +11,7 @@ http://contao413.local/api/propstack/units?key=contao_api_key
 ```
 
 **Example (PHP):**
-```
+```php
 $objUnits = new UnitController();
 $objUnits->setFormat(PropstackController::FORMAT_JSON);
 
