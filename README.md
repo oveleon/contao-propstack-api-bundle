@@ -7,7 +7,7 @@ This extension serves as a bridge between Contao and the Propstack API.
 
 **Example (GET):**
 ```
-http://contao413.local/api/propstack/units?key=contao_api_key
+https://example.com/api/propstack/units?key=contao_api_key
 ```
 
 **Example (PHP):**
