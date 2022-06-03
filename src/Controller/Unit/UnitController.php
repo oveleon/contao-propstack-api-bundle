@@ -36,7 +36,7 @@ class UnitController extends PropstackController
      */
     public function readOne($id)
     {
-        // Add id as a route fragment
+        // Add id to route
         $this->addRoutePath($id);
 
         return $this->read([]);
@@ -52,6 +52,36 @@ class UnitController extends PropstackController
                 ->validate(['property' => $parameters]),
             self::METHOD_CREATE
         );
+
+        return $this->getResponse();
+    }
+
+    /**
+     * Edit units
+     */
+    public function edit($id, array $parameters)
+    {
+        // Add id to route
+        $this->addRoutePath($id);
+
+        $this->call(
+            (new UnitOptions(Options::MODE_EDIT))
+                ->validate(['property' => $parameters]),
+            self::METHOD_EDIT
+        );
+
+        return $this->getResponse();
+    }
+
+    /**
+     * Delete unit
+     */
+    public function delete($id)
+    {
+        // Add id to route
+        $this->addRoutePath($id);
+
+        $this->call([], self::METHOD_DELETE);
 
         return $this->getResponse();
     }

@@ -6,6 +6,7 @@ use Contao\System;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitController;
 use Oveleon\ContaoPropstackApiBundle\Exception\ApiAccessDeniedException;
+use Oveleon\ContaoPropstackApiBundle\Exception\ApiMethodDeniedException;
 use Oveleon\ContaoPropstackApiBundle\Security\Api\Authenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -78,9 +79,11 @@ class RoutingController
 
             case PropstackController::METHOD_EDIT:
                 // Edit
+                return $objUnits->edit($id, $parameters);
 
             case PropstackController::METHOD_DELETE:
                 // Delete
+                return $objUnits->delete($id);
 
             case PropstackController::METHOD_READ:
                 // Read
@@ -92,6 +95,6 @@ class RoutingController
                 return $objUnits->read($parameters);
         }
 
-        return new JsonResponse('');
+        throw new ApiMethodDeniedException('The method used is not supported');
     }
 }

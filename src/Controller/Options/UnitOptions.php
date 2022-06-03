@@ -17,39 +17,144 @@ final class UnitOptions extends Options
             'country',
             'project_id',
             'marketing_type',
-            'outputlanguage',
-            'countryIsoCodeType',
-            'addMobileUrl'
+            'rs_type',
+            'expand',
+            'archived',
+            'property_ids'
         ]);
 
-        $this->set(Options::MODE_CREATE, [
-            'property' => $this->getAllPropertyFields()
-        ]);
-
-        $this->set(Options::MODE_EDIT, [
-            'property' => $this->getAllPropertyFields()
-        ]);
+        // Create and edit modes are dynamic, see validate-Methode
     }
 
     /**
-     * Extended validation
+     * Extended validation for dynamic field sets (CREATE, EDIT)
      */
     public function validate(array $param, bool $includeRequestParameter = false): array
     {
-        $validOptions = parent::validate($param, $includeRequestParameter);
-
-        // Perform extra checks only in create mode
-        if($this->mode !== self::MODE_CREATE)
+        // Perform extra checks only in create oder edit mode
+        if(!in_array($this->mode, [self::MODE_CREATE, self::MODE_EDIT]))
         {
-            return $validOptions;
+            return parent::validate($param, $includeRequestParameter);
         }
 
-        if(!$this->isValid('property/rs_type'))
+        if(!isset($param['property']['rs_type']))
         {
-            throw new ApiInvalidArgumentException('For creating objects the parameter `rs_type` is required');
+            throw new ApiInvalidArgumentException('For creating or editing properties the parameter `rs_type` is required');
         }
 
-        return $validOptions;
+        $specifiedOptions = array_merge(
+            $this->getGlobalFields(),
+            $this->getAddressFields(),
+            $this->getDescriptionFields(),
+            $this->getCourtageFields(),
+            $this->getConnectionFields()
+        );
+
+        switch ($param['property']['rs_type'])
+        {
+            case Constants::OBJECT_TYPE_APARTMENT:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getApartmentFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_HOUSE:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getHouseFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_TRADE_SITE:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getTradeSiteFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_GARAGE:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getGarageFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_SHORT_TERM_ACCOMODATION:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getShortTermAccommodationFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_OFFICE:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getOfficeFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_GASTRONOMY:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getGastronomyFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_STORE:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getStoreFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_INDUSTRY:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getIndustryFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_SPECIAL_PURPOSE:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getSpecialFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+
+            case Constants::OBJECT_TYPE_INVESTMENT:
+                $specifiedOptions = array_merge(
+                    $specifiedOptions,
+                    $this->getInvestmentFields(),
+                    $this->getEnergyFields()
+                );
+
+                break;
+        }
+
+        // Set new field data
+        $this->set($this->mode, ['property' => $specifiedOptions], false);
+
+        return parent::validate($param, $includeRequestParameter);
     }
 
     /**
@@ -63,13 +168,13 @@ final class UnitOptions extends Options
             $this->getDescriptionFields(),
             $this->getApartmentFields(),
             $this->getHouseFields(),
-            $this->getPlotFields(),
+            $this->getTradeSiteFields(),
             $this->getGarageFields(),
-            $this->getTemporaryLivingFields(),
+            $this->getShortTermAccommodationFields(),
             $this->getOfficeFields(),
             $this->getGastronomyFields(),
-            $this->getShopFields(),
-            $this->getWarehouseFields(),
+            $this->getStoreFields(),
+            $this->getIndustryFields(),
             $this->getSpecialFields(),
             $this->getInvestmentFields(),
             $this->getEnergyFields(),
@@ -84,6 +189,8 @@ final class UnitOptions extends Options
     public function getGlobalFields(): array
     {
         return [
+            'page',
+            'per',
             'marketing_type',
             'object_type',
             'rs_type',
@@ -238,9 +345,9 @@ final class UnitOptions extends Options
     }
 
     /**
-     * Return all valid plot fields
+     * Return all valid trade site / plot fields
      */
-    public function getPlotFields(): array
+    public function getTradeSiteFields(): array
     {
         return [
             'plot_area',
@@ -287,9 +394,9 @@ final class UnitOptions extends Options
     }
 
     /**
-     * Return all valid temporary living fields
+     * Return all valid short term accommodation fields
      */
-    public function getTemporaryLivingFields(): array
+    public function getShortTermAccommodationFields(): array
     {
         return [
             'short_term_accomodation_type',
@@ -410,7 +517,7 @@ final class UnitOptions extends Options
     /**
      * Return all valid shop fields
      */
-    public function getShopFields(): array
+    public function getStoreFields(): array
     {
         return [
             'store_type',
@@ -459,7 +566,7 @@ final class UnitOptions extends Options
     /**
      * Return all valid warehouse fields
      */
-    public function getWarehouseFields(): array
+    public function getIndustryFields(): array
     {
         return [
             'industry_type',
@@ -633,109 +740,4 @@ final class UnitOptions extends Options
             'relationships_attributes'
         ];
     }
-
-
-    /*public function getObjectCategories(): array
-    {
-        return [
-            "ROOF_STOREY", // "Dachgeschoss"
-            "LOFT", // "Loft"
-            "MAISONETTE", // "Maisonette"
-            "PENTHOUSE", // "Penthouse"
-            "TERRACED_FLAT", // "Terrassenwohnung"
-            "GROUND_FLOOR", // "Erdgeschosswohnung"
-            "APARTMENT", // "Etagenwohnung"
-            "RAISED_GROUND_FLOOR", // "Hochparterre"
-            "HALF_BASEMENT", // "Souterrain"
-            "ATTIKA", // "Attikawohnung"
-            "OTHER", // "Sonstige"
-            "SINGLE_FAMILY_HOUSE", // "Einfamilienhaus"
-            "TWO_FAMILY_HOUSE", // "Zweifamilienhaus"
-            "TERRACE_HOUSE", // "Reihenhaus"
-            "MID_TERRACE_HOUSE", // "Reihenmittelhaus"
-            "TERRACE_END_HOUSE", // "Reihenendhaus"
-            "END_TERRACE_HOUSE", // "Reiheneckhaus"
-            "MULTI_FAMILY_HOUSE", // "Mehrfamilienhaus"
-            "TOWNHOUSE", // "Stadthaus"
-            "FINCA", // "Finca"
-            "BUNGALOW", // "Bungalow"
-            "FARMHOUSE", // "Bauernhaus"
-            "SEMIDETACHED_HOUSE", // "Doppelhaushälfte"
-            "VILLA", // "Villa"
-            "CASTLE_MANOR_HOUSE", // "Burg/Schloss"
-            "SPECIAL_REAL_ESTATE", // "Besondere Immobilie"
-            "TWIN_SINGLE_FAMILY_HOUSE", // "Doppeleinfamilienhaus"
-            "TRADE_SITE", // "Grundstück"
-            "GARAGE", // "Garage"
-            "STREET_PARKING", // "Außenstellplatz"
-            "CARPORT", // "Carport"
-            "DUPLEX", // "Duplex"
-            "CAR_PARK", // "Parkhaus"
-            "UNDERGROUND_GARAGE", // "Tiefgarage"
-            "DOUBLE_GARAGE", // "Doppelgarage"
-            "OFFICE_LOFT", // "Loft"
-            "STUDIO", // "Atelier"
-            "OFFICE", // "Büro"
-            "OFFICE_FLOOR", // "Büroetage"
-            "OFFICE_BUILDING", // "Bürohaus"
-            "OFFICE_CENTRE", // "Bürozentrum"
-            "OFFICE_STORAGE_BUILDING", // "Büro-/ Lagergebäude"
-            "SURGERY", // "Praxis"
-            "SURGERY_FLOOR", // "Praxisetage"
-            "SURGERY_BUILDING", // "Praxishaus"
-            "COMMERCIAL_CENTRE", // "Gewerbezentrum"
-            "LIVING_AND_COMMERCIAL_BUILDING", // "Wohn- und Geschäftsgebäude"
-            "OFFICE_AND_COMMERCIAL_BUILDING", // "Büro- und Geschäftshaus"
-            "BAR_LOUNGE", // "Barbetrieb/Lounge"
-            "CAFE", // "Café"
-            "CLUB_DISCO", // "Club/Diskothek"
-            "GUESTS_HOUSE", // "Gästehaus"
-            "TAVERN", // "Gaststätte"
-            "HOTEL", // "Hotel"
-            "HOTEL_RESIDENCE", // "Hotelanwesen"
-            "HOTEL_GARNI", // "Hotel garni"
-            "PENSION", // "Pension"
-            "RESTAURANT", // "Restaurant"
-            "SHOWROOM_SPACE", // "Ausstellungsfläche"
-            "SHOPPING_CENTRE", // "Einkaufszentrum"
-            "FACTORY_OUTLET", // "Factory Outlet"
-            "DEPARTMENT_STORE", // "Kaufhaus"
-            "KIOSK", // "Kiosk"
-            "STORE", // "Laden"
-            "SELF_SERVICE_MARKET", // "SB-Markt"
-            "SALES_AREA", // "Verkaufsfläche"
-            "SALES_HALL", // "Verkaufshalle"
-            "RESIDENCE", // "Anwesen"
-            "FARM", // "Bauernhof"
-            "HORSE_FARM", // "Reiterhof"
-            "VINEYARD", // "Weingut"
-            "REPAIR_SHOP", // "Werkstatt"
-            "LEISURE_FACILITY", // "Freizeitanlage"
-            "COMMERCIAL_UNIT", // "Gewerbeeinheit"
-            "INDUSTRIAL_AREA", // "Gewerbefläche"
-            "SPECIAL_ESTATE", // "Spezialobjekt"
-            "INVEST_FREEHOLD_FLAT", // "Eigentumswohnung"
-            "INVEST_SINGLE_FAMILY_HOUSE", // "Einfamilienhaus"
-            "INVEST_MULTI_FAMILY_HOUSE", // "Mehrfamilienhaus"
-            "INVEST_LIVING_BUSINESS_HOUSE", // "Wohn/Geschäftshaus"
-            "INVEST_HOUSING_ESTATE", // "Wohnanlage"
-            "INVEST_MICRO_APARTMENTS", // "Micro-Apartments"
-            "INVEST_OFFICE_BUILDING", // "Bürohaus"
-            "INVEST_COMMERCIAL_BUILDING", // "Geschäftshaus"
-            "INVEST_OFFICE_AND_COMMERCIAL_BUILDING", // "Büro- und Geschäftshaus"
-            "INVEST_SHOP_SALES_FLOOR", // "Laden/Verkaufsfläche"
-            "INVEST_SUPERMARKET", // "Supermarkt"
-            "INVEST_SHOPPING_CENTRE", // "Einkaufszentrum"
-            "INVEST_RETAIL_PARK", // "Fachmarktzentrum"
-            "INVEST_HOTEL", // "Hotel"
-            "INVEST_BOARDING_HOUSE", // "Boarding House"
-            "INVEST_SURGERY_BUILDING", // "Ärztehaus"
-            "INVEST_CLINIC", // "Klinik"
-            "INVEST_ASSISTED_LIVING", // "Betreutes Wohnen"
-            "INVEST_COMMERCIAL_CENTRE", // "Gewerbepark"
-            "INVEST_HALL_STORAGE", // "Halle/Logistik"
-            "INVEST_INDUSTRIAL_PROPERTY", // "Produktion/Fertigung"
-            "INVEST_CAR_PARK" // "Parkhaus"
-        ];
-    }*/
 }

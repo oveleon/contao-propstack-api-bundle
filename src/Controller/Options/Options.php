@@ -81,9 +81,15 @@ abstract class Options implements OptionsInterface
     /**
      * Set valid parameter additive by mode
      */
-    protected function set(int $mode, array $data): void
+    protected function set(int $mode, array $data, bool $merge = true): void
     {
-        $this->parameters[ $mode ] = array_merge_recursive($this->parameters[ $mode ] ?? [], $data);
+        if($merge)
+        {
+            $this->parameters[ $mode ] = array_merge_recursive($this->parameters[ $mode ] ?? [], $data);
+            return;
+        }
+
+        $this->parameters[ $mode ] = $data;
     }
 
     /**
@@ -99,7 +105,6 @@ abstract class Options implements OptionsInterface
      */
     public function get(): array
     {
-        // ToDo: Deep linking
         return $this->parameters[ $this->mode ] ?? [];
     }
 
@@ -197,6 +202,7 @@ abstract class Options implements OptionsInterface
                 {
                     switch ($this->mode)
                     {
+                        // ToDo: Only CREATE and EDIT?
                         // list of valid key-value pairs
                         case self::MODE_CREATE:
                         case self::MODE_EDIT:

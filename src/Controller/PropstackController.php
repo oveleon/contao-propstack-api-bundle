@@ -88,22 +88,22 @@ abstract class PropstackController
     /**
      * Call API
      */
-    protected function call(?array $parameters, string $method): void
+    protected function call(array $parameters, string $method): void
     {
         if(null === $this->key)
         {
             throw new ApiAccessDeniedException('No valid Propstack API key');
         }
 
-        $this->response = null;
-
-        switch ($method)
-        {
-            case self::METHOD_READ:   $this->response = $this->read($parameters); break;
-            case self::METHOD_CREATE: $this->response = $this->create($parameters); break;
-            case self::METHOD_EDIT:   $this->response = $this->edit($parameters); break;
-            case self::METHOD_DELETE: $this->response = $this->delete($parameters); break;
-        }
+        // Call api
+        $this->response = (HttpClient::create())->request(
+            $method,
+            $this->generateRoute(),
+            [
+                'headers' => $this->getHeaders(),
+                'json'   => $parameters
+            ]
+        );
 
         // Reset route paths and queries
         $this->routePaths = null;
@@ -122,7 +122,9 @@ abstract class PropstackController
 
         if(!in_array($this->response->getStatusCode(), [200, 201]))
         {
-            throw new ApiConnectionException('The call was not accepted by Propstack, please check the passed parameters');
+            $error = $this->response->toArray(false);
+
+            throw new ApiConnectionException($error['errors'][0]);
         }
 
         // Get content as array
@@ -148,7 +150,7 @@ abstract class PropstackController
     /**
      * Temporarily adds a route path, paths are reset after executing `call`
      */
-    protected function addRoutePath(string $path): void
+    protected function addRoutePath($path): void
     {
         $this->routePaths[] = $path;
     }
@@ -162,59 +164,12 @@ abstract class PropstackController
     }
 
     /**
-     * Read properties
-     */
-    private function read(?array $parameters): ResponseInterface
-    {
-        return (HttpClient::create())->request(
-            self::METHOD_READ,
-            $this->generateRoute(),
-            [
-                'headers' => $this->getHeaders(),
-                'query'   => $parameters
-            ]
-        );
-    }
-
-    /**
-     * Create properties
-     */
-    private function create(?array $parameters): ResponseInterface
-    {
-        return (HttpClient::create())->request(
-            self::METHOD_CREATE,
-            $this->generateRoute(),
-            [
-                'headers' => $this->getHeaders(),
-                'json'    => $parameters
-            ]
-        );
-    }
-
-    /**
-     * Edit properties
-     */
-    private function edit(?array $parameters): ?array
-    {
-        // PUT
-        return [];
-    }
-
-    /**
-     * Delete properties
-     */
-    private function delete(?array $parameters): ?array
-    {
-        // DELETE
-        return [];
-    }
-
-    /**
      * Returns the request headers
      */
     private function getHeaders(): array
     {
         return [
+            'Content-Type' => 'application/json',
             'X-API-KEY' => $this->key
         ];
     }
