@@ -4,6 +4,32 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Options;
 
 class Constants
 {
+    /**
+     * Activity constants
+     */
+    const ACTIVITY_TYPE_MESSAGE = 'message';
+    const ACTIVITY_TYPE_NOTE = 'note';
+    const ACTIVITY_TYPE_REMINDER = 'reminder';
+    const ACTIVITY_TYPE_EVENT = 'event';
+    const ACTIVITY_TYPE_POLICY = 'policy';
+
+    /**
+     * Custom fields constants
+     */
+    const CUSTOM_FIELD_ENTITY_CLIENTS = 'for_clients';
+    const CUSTOM_FIELD_ENTITY_PROPERTIES = 'for_properties';
+    const CUSTOM_FIELD_ENTITY_PROJECTS = 'for_projects';
+    const CUSTOM_FIELD_ENTITY_BROKERS = 'for_brokers';
+
+    /**
+     * Image constants
+     */
+    const IMAGE_TYPE_PROPERTY = 'Property';
+    const IMAGE_TYPE_PROJECT = 'Project';
+
+    /**
+     * Unit constants
+     */
     const MARKETING_TYPE_BUY = 'BUY';
     const MARKETING_TYPE_RENT = 'RENT';
 

@@ -41,7 +41,6 @@ abstract class Options implements OptionsInterface
     const MODE_EDIT = 1;
     const MODE_CREATE = 2;
     const MODE_DELETE = 4;
-    const MODE_UPLOAD = 5;
 
     /**
      * Accepted modes
@@ -200,7 +199,7 @@ abstract class Options implements OptionsInterface
 
                 foreach ($val as $v)
                 {
-                    switch ($this->mode)
+                   switch ($this->mode)
                     {
                         // ToDo: Only CREATE and EDIT?
                         // list of valid key-value pairs

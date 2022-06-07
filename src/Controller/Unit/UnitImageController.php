@@ -20,10 +20,10 @@ class UnitImageController extends PropstackController
     /**
      * Upload unit image
      */
-    public function upload(array $parameters)
+    public function create(array $parameters)
     {
         $this->call(
-            (new UnitImageOptions(Options::MODE_UPLOAD))
+            (new UnitImageOptions(Options::MODE_CREATE))
                 ->validate($parameters),
             self::METHOD_CREATE
         );

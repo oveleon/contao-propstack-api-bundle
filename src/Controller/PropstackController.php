@@ -130,13 +130,26 @@ abstract class PropstackController
         // Get content as array
         $content = $this->response->toArray();
 
-        // Create response array
+        // Set response array
         $response = [
+            'data' => $content,
             'meta' => [
-                'absolute' => isset($content['id']) ? 1 : count($content)
-            ],
-            'data' => $content
+                'total_count' => isset($content['id']) ? 1 : count($content)
+            ]
         ];
+
+        // Check if the response contains a meta schema
+        if(array_key_exists('meta', $content))
+        {
+            $response['meta'] = $content['meta'];
+        }
+
+        // Check if the response contains a meta schema
+        if(array_key_exists('data', $content))
+        {
+            $response['meta']['total_count'] = count($content['data']);
+            $response['data'] = $content['data'];
+        }
 
         switch ($this->format)
         {

@@ -9,6 +9,8 @@ final class UnitOptions extends Options
     protected function configure(): void
     {
         $this->set(Options::MODE_READ, [
+            'page',
+            'per',
             'order',
             'sort_by',
             'status',
@@ -189,8 +191,6 @@ final class UnitOptions extends Options
     public function getGlobalFields(): array
     {
         return [
-            'page',
-            'per',
             'marketing_type',
             'object_type',
             'rs_type',
