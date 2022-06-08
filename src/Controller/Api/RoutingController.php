@@ -378,7 +378,7 @@ class RoutingController
      *
      * @Route("/documents/{id}", defaults={"id" = null}, name="documents")
      */
-    public function documents(?int $id = null): JsonResponse
+    public function documents($id = null): JsonResponse
     {
         $request = $this->requestStack->getCurrentRequest();
         $parameters = $request->query->all();
@@ -392,6 +392,11 @@ class RoutingController
                 // Read
                 if(null !== $id)
                 {
+                    if('tags' === $id)
+                    {
+                        return $objDocuments->readTags();
+                    }
+
                     return $objDocuments->readOne($id);
                 }
 

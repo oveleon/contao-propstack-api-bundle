@@ -43,6 +43,17 @@ class DocumentController extends PropstackController
     }
 
     /**
+     * Read document tags
+     */
+    public function readTags()
+    {
+        // Add id to route
+        $this->addRoutePath('tags');
+
+        return $this->read([]);
+    }
+
+    /**
      * Create documents
      */
     public function create(array $parameters)
