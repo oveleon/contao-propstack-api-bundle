@@ -7,6 +7,7 @@ use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityTypeController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactSourceController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Department\DepartmentController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Document\DocumentController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Email\EmailController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Event\EventController;
@@ -16,6 +17,7 @@ use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldControlle
 use Oveleon\ContaoPropstackApiBundle\Controller\Note\NoteController;
 use Oveleon\ContaoPropstackApiBundle\Controller\SearchInquiry\SearchInquiryController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Task\TaskController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Team\TeamController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitImageController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitLinkController;
@@ -528,6 +530,50 @@ class RoutingController
             case PropstackController::METHOD_READ:
                 // Read
                 return $objLocations->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Teams
+     *
+     * @Route("/teams", name="teams")
+     */
+    public function teams(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $objTeams = new TeamController();
+        $objTeams->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objTeams->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Departments
+     *
+     * @Route("/departments", name="department")
+     */
+    public function departments(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $objDepartments = new DepartmentController();
+        $objDepartments->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objDepartments->read();
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
