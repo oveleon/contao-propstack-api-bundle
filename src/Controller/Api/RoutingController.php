@@ -5,6 +5,7 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Api;
 use Contao\System;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityTypeController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Document\DocumentController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Event\EventController;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldController;
@@ -366,6 +367,46 @@ class RoutingController
             case PropstackController::METHOD_DELETE:
                 // Delete
                 return $objInquiries->delete($id);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Documents
+     *
+     * @Route("/documents/{id}", defaults={"id" = null}, name="documents")
+     */
+    public function documents(?int $id = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objDocuments = new DocumentController();
+        $objDocuments->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                if(null !== $id)
+                {
+                    return $objDocuments->readOne($id);
+                }
+
+                return $objDocuments->read($parameters);
+
+            case PropstackController::METHOD_CREATE:
+                // Create
+                return $objDocuments->create($parameters);
+
+            case PropstackController::METHOD_EDIT:
+                // Edit
+                return $objDocuments->edit($id, $parameters);
+
+            case PropstackController::METHOD_DELETE:
+                // Delete
+                return $objDocuments->delete($id);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');

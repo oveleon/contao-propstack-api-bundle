@@ -14,7 +14,7 @@ final class SearchInquiryOptions extends Options
         $this->set(Options::MODE_EDIT, $this->getFields());
     }
 
-    public function getFields()
+    public function getFields(): array
     {
         return [
             'client_id',

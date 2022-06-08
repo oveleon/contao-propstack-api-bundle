@@ -213,7 +213,7 @@ abstract class Options implements OptionsInterface
                             }
                         }
                     }
-                    elseif(array_key_exists($v, $param[ $key ]))
+                    elseif(is_array($param[ $key ]) && array_key_exists($v, $param[ $key ]))
                     {
                         $accepts[ $key ][ $v ] = $param[ $key ][ $v ];
                     }
