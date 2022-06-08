@@ -6,6 +6,7 @@ use Contao\System;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityTypeController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Document\DocumentController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Email\EmailController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Event\EventController;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldController;
@@ -407,6 +408,29 @@ class RoutingController
             case PropstackController::METHOD_DELETE:
                 // Delete
                 return $objDocuments->delete($id);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Messages
+     *
+     * @Route("/messages", name="messages")
+     */
+    public function messages(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objEvents = new EmailController();
+        $objEvents->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_CREATE:
+                // Send (create)
+                return $objEvents->send($parameters);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
