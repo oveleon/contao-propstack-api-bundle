@@ -5,6 +5,8 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Api;
 use Contao\System;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityTypeController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactSourceController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Document\DocumentController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Email\EmailController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Event\EventController;
@@ -378,7 +380,7 @@ class RoutingController
      *
      * @Route("/documents/{id}", defaults={"id" = null}, name="documents")
      */
-    public function documents($id = null): JsonResponse
+    public function documents(/*mixed*/ $id = null): JsonResponse
     {
         $request = $this->requestStack->getCurrentRequest();
         $parameters = $request->query->all();
@@ -428,14 +430,81 @@ class RoutingController
         $request = $this->requestStack->getCurrentRequest();
         $parameters = $request->query->all();
 
-        $objEvents = new EmailController();
-        $objEvents->setFormat(PropstackController::FORMAT_JSON);
+        $objMail = new EmailController();
+        $objMail->setFormat(PropstackController::FORMAT_JSON);
 
         switch($request->getMethod())
         {
             case PropstackController::METHOD_CREATE:
                 // Send (create)
-                return $objEvents->send($parameters);
+                return $objMail->send($parameters);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Contacts
+     *
+     * @Route("/contacts/{id}/{module}", defaults={"id" = null, "module" = null}, name="contacts")
+     */
+    public function contacts(/*mixed*/ $id = null, ?string $module = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objContacts = new ContactController();
+        $objContacts->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                if(null !== $id)
+                {
+                    return $objContacts->readOne($id, $parameters);
+                }
+
+                return $objContacts->read($parameters);
+
+            case PropstackController::METHOD_CREATE:
+                // Create
+                if('favorites' === $module && null !== $id)
+                {
+                    return $objContacts->favorite($id, $parameters);
+                }
+
+                return $objContacts->create($parameters);
+
+            case PropstackController::METHOD_EDIT:
+                // Edit
+                return $objContacts->edit($id, $parameters);
+
+            case PropstackController::METHOD_DELETE:
+                // Delete
+                return $objContacts->delete($id);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Contact sources
+     *
+     * @Route("/contact_sources", name="contact_sources")
+     */
+    public function contactSources(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $objSources = new ContactSourceController();
+        $objSources->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objSources->read();
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
