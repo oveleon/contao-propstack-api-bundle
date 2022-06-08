@@ -9,6 +9,7 @@ use Oveleon\ContaoPropstackApiBundle\Controller\Event\EventController;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Note\NoteController;
+use Oveleon\ContaoPropstackApiBundle\Controller\SearchInquiry\SearchInquiryController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Task\TaskController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitImageController;
@@ -330,6 +331,41 @@ class RoutingController
             case PropstackController::METHOD_READ:
                 // Read
                 return $objEvents->read($parameters);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Search Inquiries
+     *
+     * @Route("/saved_queries/{id}", defaults={"id" = null}, name="saved_queries")
+     */
+    public function searchInquiries(?int $id = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objInquiries = new SearchInquiryController();
+        $objInquiries->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objInquiries->read($parameters);
+
+            case PropstackController::METHOD_CREATE:
+                // Create
+                return $objInquiries->create($parameters);
+
+            case PropstackController::METHOD_EDIT:
+                // Edit
+                return $objInquiries->edit($id, $parameters);
+
+            case PropstackController::METHOD_DELETE:
+                // Delete
+                return $objInquiries->delete($id);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');

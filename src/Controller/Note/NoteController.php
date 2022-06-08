@@ -19,7 +19,7 @@ class NoteController extends PropstackController
     protected string $route = 'notes';
 
     /**
-     * Create task
+     * Read task
      */
     public function read(array $parameters)
     {

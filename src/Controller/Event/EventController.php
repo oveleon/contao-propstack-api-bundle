@@ -7,7 +7,7 @@ use Oveleon\ContaoPropstackApiBundle\Controller\Options\Options;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 
 /**
- * Handle note calls
+ * Handle event calls
  *
  * @link https://docs.propstack.de/reference/termine
  * @link https://docs.propstack.de/reference/task
@@ -19,7 +19,7 @@ class EventController extends PropstackController
     protected string $route = 'events';
 
     /**
-     * Create task
+     * Create event
      */
     public function read(array $parameters)
     {
