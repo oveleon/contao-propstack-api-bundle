@@ -10,6 +10,7 @@ use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactSourceController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Document\DocumentController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Email\EmailController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Event\EventController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Location\LocationController;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Note\NoteController;
@@ -505,6 +506,28 @@ class RoutingController
             case PropstackController::METHOD_READ:
                 // Read
                 return $objSources->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Locations
+     *
+     * @Route("/locations", name="locations")
+     */
+    public function locations(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $objLocations = new LocationController();
+        $objLocations->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objLocations->read();
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
