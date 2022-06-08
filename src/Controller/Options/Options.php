@@ -1,7 +1,7 @@
 <?php
 /**
  * Options:
- * This class is used to pass only valid parameters to the onOffice API to avoid errors.
+ * This class is used to pass only valid parameters to the Propstack API to avoid errors.
  *
  * @author Daniele Sciannimanica <https://github.com/doishub>
  */
@@ -197,27 +197,25 @@ abstract class Options implements OptionsInterface
             {
                 $accepts[ $key ] = [];
 
-                foreach ($val as $v)
+                foreach ($val as $k => $v)
                 {
-                   switch ($this->mode)
+                    // Level 2
+                    if(is_array($v) && array_key_exists($k, $param[ $key ]))
                     {
-                        // ToDo: Only CREATE and EDIT?
-                        // list of valid key-value pairs
-                        case self::MODE_CREATE:
-                        case self::MODE_EDIT:
-                            if(array_key_exists($v, $param[ $key ]))
-                            {
-                                $accepts[ $key ][ $v ] = $param[ $key ][ $v ];
-                            }
+                        $accepts[ $key ][ $k ] = [];
 
-                            break;
-
-                        // list of valid keys
-                        default:
-                            if(in_array($v, $param[ $key ]))
+                        foreach ($v as $kk => $vv)
+                        {
+                            // Level 3
+                            if(!is_array($vv) && array_key_exists($vv, $param[ $key ][ $k ]))
                             {
-                                $accepts[ $key ][] = $v;
+                                $accepts[ $key ][ $k ][ $vv ] = $param[ $key ][ $k ][ $vv ];
                             }
+                        }
+                    }
+                    elseif(array_key_exists($v, $param[ $key ]))
+                    {
+                        $accepts[ $key ][ $v ] = $param[ $key ][ $v ];
                     }
                 }
 

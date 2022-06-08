@@ -3,8 +3,15 @@
 namespace Oveleon\ContaoPropstackApiBundle\Controller\Api;
 
 use Contao\System;
+use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityTypeController;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
+use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Note\NoteController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Task\TaskController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitImageController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitLinkController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitStateController;
 use Oveleon\ContaoPropstackApiBundle\Exception\ApiAccessDeniedException;
 use Oveleon\ContaoPropstackApiBundle\Exception\ApiMethodDeniedException;
@@ -108,12 +115,197 @@ class RoutingController
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        $objUnits = new UnitStateController();
-        $objUnits->setFormat(PropstackController::FORMAT_JSON);
+        $objStates = new UnitStateController();
+        $objStates->setFormat(PropstackController::FORMAT_JSON);
 
         if(PropstackController::METHOD_READ === $request->getMethod())
         {
-            return $objUnits->read();
+            return $objStates->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Property Links
+     *
+     * @Route("/links/{id}", defaults={"id" = null}, name="property_link")
+     */
+    public function propertyLinks(?int $id = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objLinks = new UnitLinkController();
+        $objLinks->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_CREATE:
+                // Create
+                return $objLinks->create($parameters);
+
+            case PropstackController::METHOD_EDIT:
+                // Edit
+                return $objLinks->edit($id, $parameters);
+
+            case PropstackController::METHOD_DELETE:
+                // Delete
+                return $objLinks->delete($id);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Property Images
+     *
+     * @Route("/images", name="property_image")
+     */
+    public function propertyImages(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objImages = new UnitImageController();
+        $objImages->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_CREATE:
+                // Create
+                return $objImages->create($parameters);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Custom fields
+     *
+     * @Route("/custom_field_groups", name="custom_field")
+     */
+    public function customFields(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objFields = new CustomFieldController();
+        $objFields->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Create
+                return $objFields->read($parameters);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Activities
+     *
+     * @Route("/activities/{id}", defaults={"id" = null}, name="activities")
+     */
+    public function activities(?int $id = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objActivity = new ActivityController();
+        $objActivity->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                if(null !== $id)
+                {
+                    return $objActivity->readOne($id);
+                }
+
+                return $objActivity->read($parameters);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Activities types
+     *
+     * @Route("/activity_types", name="activity_types")
+     */
+    public function activityTypes(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $objTypes = new ActivityTypeController();
+        $objTypes->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objTypes->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Tasks
+     *
+     * @Route("/tasks/{module}", defaults={"module" = null}, name="tasks")
+     */
+    public function tasks(?string $module = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objTasks = new TaskController();
+        $objTasks->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_CREATE:
+                // Create
+                switch ($module)
+                {
+                    case 'note':
+                        return $objTasks->createNote($parameters);
+                    case 'reminder':
+                        return $objTasks->createReminder($parameters);
+                    case 'event':
+                        return $objTasks->createEvent($parameters);
+                    case 'inquiry':
+                        return $objTasks->createInquiry($parameters);
+                    default:
+                        return $objTasks->create($parameters);
+                }
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Notes
+     *
+     * @Route("/notes", name="notes")
+     */
+    public function notes(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objTasks = new NoteController();
+        $objTasks->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objTasks->read($parameters);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
