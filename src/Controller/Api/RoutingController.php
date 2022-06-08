@@ -5,6 +5,7 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Api;
 use Contao\System;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityTypeController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Event\EventController;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Note\NoteController;
@@ -306,6 +307,29 @@ class RoutingController
             case PropstackController::METHOD_READ:
                 // Read
                 return $objTasks->read($parameters);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Events
+     *
+     * @Route("/events", name="events")
+     */
+    public function events(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objEvents = new EventController();
+        $objEvents->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objEvents->read($parameters);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
