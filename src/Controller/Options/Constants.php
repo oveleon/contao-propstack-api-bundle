@@ -37,6 +37,21 @@ class Constants
     const USAGE_TYPE_COMMERCIAL = 'COMMERCIAL';
     const USAGE_TYPE_INVESTMENT = 'INVESTMENT';
 
+    const CONDITION_FIRST_TIME_USE = 'Erstbezug';
+    const CONDITION_FIRST_TIME_USE_AFTER_REFURBISHMENT = 'Erstbezug nach Sanierung';
+    const CONDITION_MINT_CONDITION = 'neuwertig';
+    const CONDITION_REFURBISHED = 'saniert';
+    const CONDITION_PART_REFURBISHED = 'teilsaniert';
+    const CONDITION_NEED_OF_REDEVELOPMENT = 'sanierungsbedürftig';
+    const CONDITION_DERELICT = 'baufällig';
+    const CONDITION_MODERNIZED = 'modernisiert';
+    const CONDITION_FULLY_RENOVATED = 'vollständig renoviert';
+    const CONDITION_PART_RENOVATED = 'teilweise renoviert';
+    const CONDITION_WELL_KEPT = 'gepflegt';
+    const CONDITION_NEED_OF_RENOVATION = 'renovierungsbedürftig';
+    const CONDITION_NEGOTIABLE = 'nach Vereinbarung';
+    const CONDITION_RIPE_FOR_DEMOLITION = 'abbruchreif';
+
     const OBJECT_TYPE_APARTMENT = 'APARTMENT';
     const OBJECT_TYPE_HOUSE = 'HOUSE';
     const OBJECT_TYPE_TRADE_SITE = 'TRADE_SITE';
