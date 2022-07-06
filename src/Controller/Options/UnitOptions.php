@@ -208,6 +208,7 @@ final class UnitOptions extends Options
     public function getAddressFields(): array
     {
         return [
+            'street',
             'house_number',
             'zip_code',
             'location_id',
