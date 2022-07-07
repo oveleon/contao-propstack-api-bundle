@@ -16,6 +16,7 @@ use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
 use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Note\NoteController;
 use Oveleon\ContaoPropstackApiBundle\Controller\SearchInquiry\SearchInquiryController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Hook\HookController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Task\TaskController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Team\TeamController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitController;
@@ -574,6 +575,37 @@ class RoutingController
             case PropstackController::METHOD_READ:
                 // Read
                 return $objDepartments->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Hooks
+     *
+     * @Route("/hooks/{id}", defaults={"id" = null}, name="hooks")
+     */
+    public function hooks(/*mixed*/ $id = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objHooks = new HookController();
+        $objHooks->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objHooks->read();
+
+            case PropstackController::METHOD_CREATE:
+                // Create
+                return $objHooks->create($parameters);
+
+            case PropstackController::METHOD_DELETE:
+                // Delete
+                return $objHooks->delete($id);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
