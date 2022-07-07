@@ -5,6 +5,28 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Options;
 class Constants
 {
     /**
+     * Webhook constants
+     */
+    const HOOK_CLIENT_CREATED = 'client_created';
+    const HOOK_CLIENT_UPDATED = 'client_updated';
+    const HOOK_PROPERTY_CREATED = 'property_created';
+    const HOOK_PROPERTY_UPDATED = 'property_updated';
+    const HOOK_TASK_CREATED = 'task_created';
+    const HOOK_TASK_UPDATED = 'task_updated ';
+    const HOOK_TASK_DELETED = 'task_deleted';
+    const HOOK_CLIENT_PROPERTY_CREATED = 'client_property_created';
+    const HOOK_CLIENT_PROPERTY_UPDATED = 'client_property_updated';
+    const HOOK_CLIENT_PROPERTY_DELETED = 'client_property_deleted';
+    const HOOK_PROJECT_CREATED = 'project_created';
+    const HOOK_PROJECT_UPDATED = 'project_updated';
+    const HOOK_DOCUMENT_CREATED = 'document_created';
+    const HOOK_DOCUMENT_UPDATED = 'document_updated';
+    const HOOK_DOCUMENT_DELETED = 'document_deleted';
+    const HOOK_SAVED_QUERY_CREATED = 'saved_query_created';
+    const HOOK_SAVED_QUERY_UPDATED = 'saved_query_updated';
+    const HOOK_SAVED_QUERY_DELETED = 'saved_query_deleted';
+
+    /**
      * Activity constants
      */
     const ACTIVITY_TYPE_MESSAGE = 'message';
