@@ -7,6 +7,7 @@ use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityTypeController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactSourceController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Deal\DealController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Department\DepartmentController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Document\DocumentController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Email\EmailController;
@@ -606,6 +607,37 @@ class RoutingController
             case PropstackController::METHOD_DELETE:
                 // Delete
                 return $objHooks->delete($id);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Deals
+     *
+     * @Route("/client_properties/{id}", defaults={"id" = null}, name="client_properties")
+     */
+    public function clientProperties(/*mixed*/ $id = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objDeals = new DealController();
+        $objDeals->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objDeals->read($parameters);
+
+            case PropstackController::METHOD_CREATE:
+                // Create
+                return $objDeals->create($parameters);
+
+            case PropstackController::METHOD_EDIT:
+                // Delete
+                return $objDeals->edit($id, $parameters);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');

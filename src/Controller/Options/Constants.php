@@ -44,6 +44,16 @@ class Constants
     const CUSTOM_FIELD_ENTITY_BROKERS = 'for_brokers';
 
     /**
+     * Deal constants
+     */
+    const DEAL_INCLUDE_CLIENT = 'client';
+    const DEAL_INCLUDE_PROPERTY = 'property';
+
+    const DEAL_CATEGORY_QUALIFIED = 'qualified';
+    const DEAL_CATEGORY_UNQUALIFIED = 'unqualified';
+    const DEAL_CATEGORY_LOST = 'lost';
+
+    /**
      * Image constants
      */
     const IMAGE_TYPE_PROPERTY = 'Property';
