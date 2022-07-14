@@ -151,6 +151,13 @@ abstract class PropstackController
             $response['data'] = $content['data'];
         }
 
+        // Check if the response contains a data schema
+        if(array_key_exists('documents', $content))
+        {
+            $response['meta']['total_count'] = $content['meta']['total_count'];
+            $response['data'] = $content['documents'];
+        }
+
         // Check if the response contains an events schema
         if(array_key_exists('events', $content))
         {
