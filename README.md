@@ -8,6 +8,9 @@ This extension serves as a bridge between Contao and the Propstack API.
 **Example (GET):**
 ```
 https://example.com/api/propstack/units?key=contao_api_key
+
+// Show all routes
+https://example.com/api/propstack/help?key=contao_api_key
 ```
 
 **Example (PHP):**
