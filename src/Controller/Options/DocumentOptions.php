@@ -33,7 +33,8 @@ final class DocumentOptions extends Options
                 'project_id',
                 'property_id',
                 'doc',
-                'title'
+                'title',
+                'is_private'
             ]
         ];
     }
