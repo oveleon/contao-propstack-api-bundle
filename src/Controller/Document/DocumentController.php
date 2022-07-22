@@ -96,4 +96,15 @@ class DocumentController extends PropstackController
 
         return $this->getResponse();
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function transformResponse($response, $content): array
+    {
+        $response['meta']['total_count'] = $content['meta']['total_count'];
+        $response['data'] = $content['documents'];
+
+        return $response;
+    }
 }

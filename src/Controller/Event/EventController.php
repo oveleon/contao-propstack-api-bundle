@@ -31,4 +31,15 @@ class EventController extends PropstackController
 
         return $this->getResponse();
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function transformResponse($response, $content): array
+    {
+        $response['meta']['total_count'] = count($content['events']);
+        $response['data'] = $content['events'];
+
+        return $response;
+    }
 }
