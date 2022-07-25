@@ -25,6 +25,11 @@ class UnitController extends PropstackController
      */
     public function read(array $parameters)
     {
+        foreach ((new UnitOptions(Options::MODE_QUERY))->validate($parameters) as $key => $value)
+        {
+            $this->addRouteQuery($key, $value);
+        }
+
         $this->call(
             (new UnitOptions(Options::MODE_READ))
                 ->validate($parameters),
@@ -37,12 +42,12 @@ class UnitController extends PropstackController
     /**
      * Read a single unit
      */
-    public function readOne($id)
+    public function readOne($id, $parameters)
     {
         // Add id to route
         $this->addRoutePath($id);
 
-        return $this->read([]);
+        return $this->read($parameters);
     }
 
     /**

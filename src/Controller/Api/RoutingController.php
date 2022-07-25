@@ -108,7 +108,7 @@ class RoutingController
                 // Read
                 if(null !== $id)
                 {
-                    return $objUnits->readOne($id);
+                    return $objUnits->readOne($id, $parameters);
                 }
 
                 return $objUnits->read($parameters);
@@ -171,9 +171,9 @@ class RoutingController
     /**
      * Property Images
      *
-     * @Route("/images", name="property_image")
+     * @Route("/images/{id}", defaults={"id" = null}, name="property_image")
      */
-    public function propertyImages(): JsonResponse
+    public function propertyImages(?int $id = null): JsonResponse
     {
         $request = $this->requestStack->getCurrentRequest();
         $parameters = $request->query->all();
@@ -186,6 +186,14 @@ class RoutingController
             case PropstackController::METHOD_CREATE:
                 // Create
                 return $objImages->create($parameters);
+
+            case PropstackController::METHOD_EDIT:
+                // Edit
+                return $objImages->edit($id, $parameters);
+
+            case PropstackController::METHOD_DELETE:
+                // Delete
+                return $objImages->delete($id);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
