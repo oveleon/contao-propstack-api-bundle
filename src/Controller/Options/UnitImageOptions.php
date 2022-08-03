@@ -17,9 +17,10 @@ final class UnitImageOptions extends Options
             'imageable_id',
             'imageable_type',
             'is_private',
+            'is_floorplan',
             'title',
             'position',
-            //ToDo: 'tags' when implemented
+            'tags'
         ];
     }
 }
