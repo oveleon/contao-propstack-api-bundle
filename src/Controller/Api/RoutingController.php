@@ -173,7 +173,7 @@ class RoutingController
      *
      * @Route("/images/{id}", defaults={"id" = null}, name="property_image")
      */
-    public function propertyImages(?int $id = null): JsonResponse
+    public function propertyImages(/*mixed*/ $id = null): JsonResponse
     {
         $request = $this->requestStack->getCurrentRequest();
         $parameters = $request->query->all();
@@ -189,6 +189,12 @@ class RoutingController
 
             case PropstackController::METHOD_EDIT:
                 // Edit
+
+                if('sort' === $id)
+                {
+                    return $objImages->sortImages($parameters);
+                }
+
                 return $objImages->edit($id, $parameters);
 
             case PropstackController::METHOD_DELETE:
