@@ -25,6 +25,11 @@ final class UnitOptions extends Options
             'property_ids'
         ]);
 
+        $this->set(Options::MODE_QUERY, [
+            'with_meta',
+            'new'
+        ]);
+
         // Create and edit modes are dynamic, see validate-Methode
     }
 

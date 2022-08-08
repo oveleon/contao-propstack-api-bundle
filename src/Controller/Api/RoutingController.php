@@ -18,6 +18,8 @@ use Oveleon\ContaoPropstackApiBundle\Controller\CustomField\CustomFieldControlle
 use Oveleon\ContaoPropstackApiBundle\Controller\Note\NoteController;
 use Oveleon\ContaoPropstackApiBundle\Controller\SearchInquiry\SearchInquiryController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Hook\HookController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Tag\TagController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Tag\SuperTagController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Task\TaskController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Team\TeamController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Unit\UnitController;
@@ -108,7 +110,7 @@ class RoutingController
                 // Read
                 if(null !== $id)
                 {
-                    return $objUnits->readOne($id);
+                    return $objUnits->readOne($id, $parameters);
                 }
 
                 return $objUnits->read($parameters);
@@ -171,9 +173,9 @@ class RoutingController
     /**
      * Property Images
      *
-     * @Route("/images", name="property_image")
+     * @Route("/images/{id}", defaults={"id" = null}, name="property_image")
      */
-    public function propertyImages(): JsonResponse
+    public function propertyImages(/*mixed*/ $id = null): JsonResponse
     {
         $request = $this->requestStack->getCurrentRequest();
         $parameters = $request->query->all();
@@ -186,6 +188,20 @@ class RoutingController
             case PropstackController::METHOD_CREATE:
                 // Create
                 return $objImages->create($parameters);
+
+            case PropstackController::METHOD_EDIT:
+                // Edit
+
+                if('sort' === $id)
+                {
+                    return $objImages->sortImages($parameters);
+                }
+
+                return $objImages->edit($id, $parameters);
+
+            case PropstackController::METHOD_DELETE:
+                // Delete
+                return $objImages->delete($id);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
@@ -259,6 +275,56 @@ class RoutingController
             case PropstackController::METHOD_READ:
                 // Read
                 return $objTypes->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Tags
+     *
+     * @Route("/tags", name="tags")
+     */
+    public function tags(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objTags = new TagController();
+        $objTags->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objTags->read($parameters);
+
+            case PropstackController::METHOD_CREATE:
+                // Create
+                return $objTags->create($parameters);
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Super tags
+     *
+     * @Route("/super_tags", name="super_tags")
+     */
+    public function superTags(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $parameters = $request->query->all();
+
+        $objTags = new SuperTagController();
+        $objTags->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objTags->read($parameters);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');

@@ -30,4 +30,56 @@ class UnitImageController extends PropstackController
 
         return $this->getResponse();
     }
+
+    /**
+     * Edit unit image
+     */
+    public function edit($id, array $parameters)
+    {
+        // Add id to route
+        $this->addRoutePath($id);
+
+        $this->call(
+            (new UnitImageOptions(Options::MODE_EDIT))
+                ->validate($parameters),
+            self::METHOD_EDIT
+        );
+
+        return $this->getResponse();
+    }
+
+    /**
+     * Delete unit image
+     */
+    public function delete($id)
+    {
+        // Add id to route
+        $this->addRoutePath($id);
+
+        $this->call([], self::METHOD_DELETE);
+
+        return $this->getResponse();
+    }
+
+    /**
+     * Sort unit images
+     */
+    public function sortImages(array $parameters)
+    {
+        // Add sort attribute to route
+        $this->addRoutePath('sort');
+
+        foreach ((new UnitImageOptions(Options::MODE_QUERY))->validate($parameters) as $key => $value)
+        {
+            $this->addRouteQuery($key, $value);
+        }
+
+        $this->call(
+            (new UnitImageOptions(UnitImageOptions::MODE_EDIT_SORT))
+                ->validate($parameters),
+            self::METHOD_EDIT
+        );
+
+        return $this->getResponse();
+    }
 }

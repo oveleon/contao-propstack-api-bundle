@@ -32,6 +32,7 @@ final class DocumentOptions extends Options
                 'client_id',
                 'project_id',
                 'property_id',
+                'folder_id',
                 'doc',
                 'title',
                 'is_private'
