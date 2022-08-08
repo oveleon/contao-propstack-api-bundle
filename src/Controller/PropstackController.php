@@ -5,6 +5,7 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller;
 use Contao\Config;
 use Oveleon\ContaoPropstackApiBundle\Exception\ApiAccessDeniedException;
 use Oveleon\ContaoPropstackApiBundle\Exception\ApiConnectionException;
+use Symfony\Component\HttpClient\Exception\JsonException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -102,7 +103,14 @@ abstract class PropstackController
 
         if(count($parameters))
         {
-            $params['json'] = $parameters;
+            switch ($method)
+            {
+                case self::METHOD_READ:
+                    $params['query'] = $parameters;
+                    break;
+                default:
+                    $params['json'] = $parameters;
+            }
         }
 
         $this->response = (HttpClient::create())->request(
@@ -134,7 +142,13 @@ abstract class PropstackController
         }
 
         // Get content as array
-        $content = $this->response->toArray();
+        try {
+            $content = $this->response->toArray();
+        }
+        catch (JsonException $e)
+        {
+            $content = [];
+        }
 
         // Set default response array
         $response = [
