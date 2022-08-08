@@ -96,13 +96,19 @@ abstract class PropstackController
         }
 
         // Call api
+        $params = [
+            'headers' => $this->getHeaders()
+        ];
+
+        if(count($parameters))
+        {
+            $params['json'] = $parameters;
+        }
+
         $this->response = (HttpClient::create())->request(
             $method,
             $this->generateRoute(),
-            [
-                'headers' => $this->getHeaders(),
-                'json'   => $parameters
-            ]
+            $params
         );
 
         // Reset route paths and queries
