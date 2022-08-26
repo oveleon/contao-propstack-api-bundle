@@ -103,7 +103,7 @@ class DocumentController extends PropstackController
     protected function transformResponse($response, $content): array
     {
         $response['meta']['total_count'] = $content['meta']['total_count'];
-        $response['data'] = $content['documents'];
+        $response['data'] = $content['documents'] ?? $content;
 
         return $response;
     }
