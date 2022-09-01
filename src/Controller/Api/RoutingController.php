@@ -391,9 +391,9 @@ class RoutingController
     /**
      * Events
      *
-     * @Route("/events", name="events")
+     * @Route("/events/{id}/{module}", name="events")
      */
-    public function events(): JsonResponse
+    public function events(/*mixed*/ $id = null, ?string $module = null): JsonResponse
     {
         $request = $this->requestStack->getCurrentRequest();
         $parameters = $request->query->all();
@@ -406,6 +406,13 @@ class RoutingController
             case PropstackController::METHOD_READ:
                 // Read
                 return $objEvents->read($parameters);
+
+            case PropstackController::METHOD_CREATE:
+                // Create viewings
+                if('viewings' === $module && null !== $id)
+                {
+                    return $objEvents->viewings($id, $parameters);
+                }
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');

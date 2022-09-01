@@ -4,6 +4,8 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Options;
 
 final class EventOptions extends Options
 {
+    const MODE_CREATE_VIEWINGS = 3001;
+
     protected function configure(): void
     {
         $this->set(Options::MODE_READ, [
@@ -19,6 +21,11 @@ final class EventOptions extends Options
             'client',
             'property',
             'project'
+        ]);
+
+        $this->set(self::MODE_CREATE_VIEWINGS, [
+            'client_id',
+            'viewing_date'
         ]);
     }
 }
