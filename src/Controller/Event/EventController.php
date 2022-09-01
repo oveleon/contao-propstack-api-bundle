@@ -55,7 +55,7 @@ class EventController extends PropstackController
      */
     protected function transformResponse($response, $content): array
     {
-        $response['meta']['total_count'] = count($content['events']);
+        $response['meta']['total_count'] = count($content['events'] ?? []);
         $response['data'] = $content['events'];
 
         return $response;

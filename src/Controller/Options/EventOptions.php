@@ -24,8 +24,10 @@ final class EventOptions extends Options
         ]);
 
         $this->set(self::MODE_CREATE_VIEWINGS, [
-            'client_id',
-            'viewing_date'
+            'viewing' => [
+                'client_id',
+                'viewing_date'
+            ]
         ]);
     }
 }
