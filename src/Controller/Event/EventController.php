@@ -35,7 +35,7 @@ class EventController extends PropstackController
     /**
      * Set Participants to a specific event
      */
-    public function viewings($id, array $parameters)
+    public function createViewing($id, array $parameters)
     {
         // Add id and viewings to route
         $this->addRoutePath($id);
@@ -46,6 +46,21 @@ class EventController extends PropstackController
                 ->validate($parameters),
             self::METHOD_CREATE
         );
+
+        return $this->getResponse();
+    }
+
+    /**
+     * Delete Participants from a specific event
+     */
+    public function deleteViewing($eventId, $viewingId)
+    {
+        // Add id and viewings to route
+        $this->addRoutePath($eventId);
+        $this->addRoutePath('viewings');
+        $this->addRoutePath($viewingId);
+
+        $this->call([],self::METHOD_DELETE);
 
         return $this->getResponse();
     }

@@ -393,7 +393,7 @@ class RoutingController
      *
      * @Route("/events/{id}/{module}", name="events")
      */
-    public function events(/*mixed*/ $id = null, ?string $module = null): JsonResponse
+    public function events(/*mixed*/ $id = null, /*string|int|null*/ $module = null): JsonResponse
     {
         $request = $this->requestStack->getCurrentRequest();
         $parameters = $request->query->all();
@@ -408,10 +408,16 @@ class RoutingController
                 return $objEvents->read($parameters);
 
             case PropstackController::METHOD_CREATE:
-                // Create viewings
+                // Create viewing
                 if('viewings' === $module && null !== $id)
                 {
-                    return $objEvents->viewings($id, $parameters);
+                    return $objEvents->createViewing($id, $parameters);
+                }
+            case PropstackController::METHOD_DELETE:
+                // Delete viewing
+                if(is_integer($module) && null !== $id)
+                {
+                    return $objEvents->deleteViewing($id, $module);
                 }
         }
 
