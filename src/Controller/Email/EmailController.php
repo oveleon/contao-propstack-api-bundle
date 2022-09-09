@@ -24,7 +24,7 @@ class EmailController extends PropstackController
     {
         $this->call(
             (new EmailOptions(Options::MODE_CREATE))
-                ->validate($parameters),
+                ->validate(['message' => $parameters]),
             self::METHOD_CREATE
         );
 
