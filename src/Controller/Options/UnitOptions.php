@@ -199,6 +199,7 @@ final class UnitOptions extends Options
             'marketing_type',
             'object_type',
             'rs_type',
+            'rs_category',
             'broker_id',
             'property_status_id',
             'exposee_id',
