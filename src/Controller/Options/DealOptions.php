@@ -20,8 +20,9 @@ final class DealOptions extends Options
             'reservation_reason_ids',
             'category',
             'deal_stage_ids',
-            'deal_pipeline_ids',
+            'deal_pipeline_id',
             'project_id',
+            'broker_id',
             'client_id',
             'property_id'
         ];
