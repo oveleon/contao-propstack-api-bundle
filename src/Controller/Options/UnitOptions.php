@@ -204,6 +204,7 @@ final class UnitOptions extends Options
             'property_status_id',
             'exposee_id',
             'unit_id',
+            'sold_price',
             'title'
         ];
     }
