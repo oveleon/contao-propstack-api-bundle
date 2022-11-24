@@ -735,6 +735,7 @@ final class UnitOptions extends Options
         return [
             'courtage',
             'courtage_note',
+            'internal_brokerage',
             'deposit'
         ];
     }
