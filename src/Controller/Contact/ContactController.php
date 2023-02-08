@@ -2,6 +2,7 @@
 
 namespace Oveleon\ContaoPropstackApiBundle\Controller\Contact;
 
+use Oveleon\ContaoPropstackApiBundle\Controller\CustomFieldTrait;
 use Oveleon\ContaoPropstackApiBundle\Controller\Options\ContactOptions;
 use Oveleon\ContaoPropstackApiBundle\Controller\Options\Options;
 use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
@@ -15,6 +16,8 @@ use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
  */
 class ContactController extends PropstackController
 {
+    use CustomFieldTrait;
+
     protected string $route = 'contacts';
 
     /**
@@ -75,9 +78,15 @@ class ContactController extends PropstackController
             $parameters['identifier'] = 'token';
         }
 
+        $options = new ContactOptions(Options::MODE_EDIT);
+
+        if($customFields = $this->getCustomFields())
+        {
+            $options->add($customFields);
+        }
+
         $this->call(
-            (new ContactOptions(Options::MODE_EDIT))
-                ->validate($parameters),
+            $options->validate($parameters),
             self::METHOD_EDIT
         );
 
@@ -89,9 +98,15 @@ class ContactController extends PropstackController
      */
     public function create(array $parameters)
     {
+        $options = new ContactOptions(Options::MODE_CREATE);
+
+        if($customFields = $this->getCustomFields())
+        {
+            $options->add(['client' => $customFields]);
+        }
+
         $this->call(
-            (new ContactOptions(Options::MODE_CREATE))
-                ->validate(['client' => $parameters]),
+            $options->validate(['client' => $parameters]),
             self::METHOD_CREATE
         );
 

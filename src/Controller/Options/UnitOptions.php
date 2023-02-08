@@ -38,7 +38,7 @@ final class UnitOptions extends Options
      */
     public function validate(array $param, bool $includeRequestParameter = false): array
     {
-        // Perform extra checks only in create oder edit mode
+        // Perform extra checks only in create or edit mode
         if(!in_array($this->mode, [self::MODE_CREATE, self::MODE_EDIT]))
         {
             return parent::validate($param, $includeRequestParameter);
@@ -159,7 +159,7 @@ final class UnitOptions extends Options
         }
 
         // Set new field data
-        $this->set($this->mode, ['property' => $specifiedOptions], false);
+        $this->set($this->mode, ['property' => $specifiedOptions]);
 
         return parent::validate($param, $includeRequestParameter);
     }

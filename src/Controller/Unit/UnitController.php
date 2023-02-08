@@ -2,6 +2,7 @@
 
 namespace Oveleon\ContaoPropstackApiBundle\Controller\Unit;
 
+use Oveleon\ContaoPropstackApiBundle\Controller\CustomFieldTrait;
 use Oveleon\ContaoPropstackApiBundle\Controller\Options\Constants;
 use Oveleon\ContaoPropstackApiBundle\Controller\Options\Options;
 use Oveleon\ContaoPropstackApiBundle\Controller\Options\UnitOptions;
@@ -16,8 +17,9 @@ use Oveleon\ContaoPropstackApiBundle\Controller\PropstackController;
  */
 class UnitController extends PropstackController
 {
-    protected string $route = 'units';
+    use CustomFieldTrait;
 
+    protected string $route = 'units';
     protected ?array $relations = null;
 
     /**
@@ -58,9 +60,15 @@ class UnitController extends PropstackController
         // Apply relationships
         $this->applyRelationships($parameters);
 
+        $options = new UnitOptions(Options::MODE_CREATE);
+
+        if($customFields = $this->getCustomFields())
+        {
+            $options->add(['property' => $customFields]);
+        }
+
         $this->call(
-            (new UnitOptions(Options::MODE_CREATE))
-                ->validate(['property' => $parameters]),
+            $options->validate(['property' => $parameters]),
             self::METHOD_CREATE
         );
 
@@ -78,9 +86,15 @@ class UnitController extends PropstackController
         // Apply relationships
         $this->applyRelationships($parameters);
 
+        $options = new UnitOptions(Options::MODE_EDIT);
+
+        if($customFields = $this->getCustomFields())
+        {
+            $options->add(['property' => $customFields]);
+        }
+
         $this->call(
-            (new UnitOptions(Options::MODE_EDIT))
-                ->validate(['property' => $parameters]),
+            $options->validate(['property' => $parameters]),
             self::METHOD_EDIT
         );
 

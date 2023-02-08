@@ -23,4 +23,17 @@ $units = $objUnits->readOne($id);
 $units = $objUnits->edit($id, $parameters);
 $units = $objUnits->create($parameters);
 $units = $objUnits->delete($id);
+
+// Create a unit with custom fields
+$objUnits->setCustomFields(['my_custom_field']);
+
+$units = $objUnits->create([
+    'title'          => 'My Unit',
+    'marketing_type' => 'BUY',      
+    'object_type'    => 'LIVING',
+    'rs_type'        => 'APARTMENT',
+    'custom_fields'  => [
+        'my_custom_field' => '123'
+    ]
+]);
 ```
