@@ -1,9 +1,12 @@
 # Contao - Propstack API
-This extension serves as a bridge between Contao and the Propstack API.
+This extension serves as a bridge between Contao and the Propstack API. You can find the documentation for Propstack [here](https://docs.propstack.de/).
 
 - Access to the API can be protected
 - API calls can be made both via GET (protected) and directly via PHP (unprotected)
 - In-build parameter checking: only allowed parameters are passed to the API to prevent errors
+
+**Endpoints:**\
+All currently available endpoints can be viewed [here](https://github.com/oveleon/contao-propstack-api-bundle/tree/main/src/Controller).
 
 **Example (GET):**
 ```
@@ -37,3 +40,4 @@ $units = $objUnits->create([
     ]
 ]);
 ```
+
