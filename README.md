@@ -1,5 +1,5 @@
 # Contao - Propstack API
-This extension serves as a bridge between Contao and the Propstack API. You can find the documentation for Propstack [here](https://docs.propstack.de/).
+This extension serves as a bridge between Contao and the Propstack API. You can find the documentation for Propstack [here](https://docs.propstack.de/). A Propstack API key is required for use.
 
 - Access to the API can be protected
 - API calls can be made both via GET (protected) and directly via PHP (unprotected)
