@@ -43,6 +43,7 @@ final class ContactOptions extends Options
     public function getFields()
     {
         return [
+            'broker_id',
             'parent_id',
             'is_company',
             'item_id',
