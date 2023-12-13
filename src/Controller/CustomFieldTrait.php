@@ -10,6 +10,7 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller;
 trait CustomFieldTrait
 {
     private ?array $customFields = null;
+    private bool   $partialMode = false;
 
     /**
      * Set custom fields
@@ -24,10 +25,24 @@ trait CustomFieldTrait
     }
 
     /**
+     * Sets custom field mode
+     *
+     * Allows updating custom fields partially
+     */
+    public function partialMode(bool $partialMode): self
+    {
+        $this->partialMode = $partialMode;
+
+        return $this;
+    }
+
+    /**
      * Get custom fields
      */
     public function getCustomFields(): ?array
     {
-        return ['custom_fields' => $this->customFields];
+        $key = $this->partialMode ? 'partial_custom_fields' : 'custom_fields';
+
+        return [$key => $this->customFields];
     }
 }
