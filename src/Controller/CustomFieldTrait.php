@@ -10,27 +10,16 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller;
 trait CustomFieldTrait
 {
     private ?array $customFields = null;
-    private bool   $partialMode = false;
+    private bool   $partialMode = true;
 
     /**
      * Set custom fields
      *
      * Allows to add unknown option fields (they must be created in Propstack)
      */
-    public function setCustomFields(array $fields): self
+    public function setCustomFields(array $fields, bool $partialMode = true): self
     {
         $this->customFields = $fields;
-
-        return $this;
-    }
-
-    /**
-     * Sets custom field mode
-     *
-     * Allows updating custom fields partially
-     */
-    public function partialMode(bool $partialMode): self
-    {
         $this->partialMode = $partialMode;
 
         return $this;
