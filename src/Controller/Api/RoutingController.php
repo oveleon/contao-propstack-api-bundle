@@ -5,6 +5,7 @@ namespace Oveleon\ContaoPropstackApiBundle\Controller\Api;
 use Contao\System;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Activity\ActivityTypeController;
+use Oveleon\ContaoPropstackApiBundle\Controller\Broker\BrokerController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Contact\ContactSourceController;
 use Oveleon\ContaoPropstackApiBundle\Controller\Deal\DealController;
@@ -275,6 +276,50 @@ class RoutingController
             case PropstackController::METHOD_READ:
                 // Read
                 return $objTypes->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Brokers
+     *
+     * @Route("/brokers", name="brokers")
+     */
+    public function brokers(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $objBrokers = new BrokerController();
+        $objBrokers->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objBrokers->read();
+        }
+
+        throw new ApiMethodDeniedException('The method used is not supported');
+    }
+
+    /**
+     * Broker
+     *
+     * @Route("/brokers/{id}", defaults={"id" = null}, name="broker")
+     */
+    public function broker(?int $id = null): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $objBrokers = new BrokerController();
+        $objBrokers->setFormat(PropstackController::FORMAT_JSON);
+
+        switch($request->getMethod())
+        {
+            case PropstackController::METHOD_READ:
+                // Read
+                return $objBrokers->readOne($id);
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
