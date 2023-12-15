@@ -282,33 +282,11 @@ class RoutingController
     }
 
     /**
-     * Brokers
-     *
-     * @Route("/brokers", name="brokers")
-     */
-    public function brokers(): JsonResponse
-    {
-        $request = $this->requestStack->getCurrentRequest();
-
-        $objBrokers = new BrokerController();
-        $objBrokers->setFormat(PropstackController::FORMAT_JSON);
-
-        switch($request->getMethod())
-        {
-            case PropstackController::METHOD_READ:
-                // Read
-                return $objBrokers->read();
-        }
-
-        throw new ApiMethodDeniedException('The method used is not supported');
-    }
-
-    /**
      * Broker
      *
-     * @Route("/brokers/{id}", defaults={"id" = null}, name="broker")
+     * @Route("/brokers/{id}", defaults={"id" = null}, name="brokers")
      */
-    public function broker(?int $id = null): JsonResponse
+    public function brokers(?int $id = null): JsonResponse
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -319,7 +297,12 @@ class RoutingController
         {
             case PropstackController::METHOD_READ:
                 // Read
-                return $objBrokers->readOne($id);
+                if(null !== $id)
+                {
+                    return $objBrokers->readOne($id);
+                }
+
+                return $objBrokers->read();
         }
 
         throw new ApiMethodDeniedException('The method used is not supported');
