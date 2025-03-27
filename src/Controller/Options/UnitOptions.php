@@ -22,7 +22,8 @@ final class UnitOptions extends Options
             'rs_type',
             'expand',
             'archived',
-            'property_ids'
+            'property_ids',
+            'include_variants'
         ]);
 
         $this->set(Options::MODE_QUERY, [
