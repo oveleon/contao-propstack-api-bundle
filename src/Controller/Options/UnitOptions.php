@@ -22,6 +22,7 @@ final class UnitOptions extends Options
             'rs_type',
             'expand',
             'archived',
+            'broker_id',
             'property_ids',
             'include_variants'
         ]);
@@ -201,7 +202,6 @@ final class UnitOptions extends Options
             'object_type',
             'rs_type',
             'rs_category',
-            'broker_id',
             'property_status_id',
             'exposee_id',
             'unit_id',
