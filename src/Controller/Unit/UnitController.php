@@ -33,8 +33,7 @@ class UnitController extends PropstackController
         }
 
         $this->call(
-            (new UnitOptions(Options::MODE_READ))
-                ->validate($parameters),
+            array_filter($parameters, fn($k) => $k !== 'key', ARRAY_FILTER_USE_KEY),
             self::METHOD_READ
         );
 
