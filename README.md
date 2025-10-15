@@ -2,7 +2,7 @@
 
 > [!IMPORTANT]
 > Open source development of this plugin has been abandoned.
-> Further development continues might continue in private and is no longer publicly available.
+> Further development might continue in private and is no longer publicly available.
 >
 > **Version 2 for Propstack API**
 > See https://api.propstack.de/docs for more information
