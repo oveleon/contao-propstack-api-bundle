@@ -1,4 +1,12 @@
-# Contao - Propstack API
+# Contao - Propstack API (v1)
+
+> [!IMPORTANT]
+> Open source development of this plugin has been abandoned.
+> Further development continues might continue in private and is no longer publicly available.
+>
+> **Version 2 for Propstack API**
+> See https://api.propstack.de/docs for more information
+
 This extension serves as a bridge between Contao and the Propstack API. You can find the documentation for Propstack [here](https://docs.propstack.de/). A Propstack API key is required for use.
 
 - Access to the API can be protected
@@ -32,7 +40,7 @@ $objUnits->setCustomFields(['my_custom_field']);
 
 $units = $objUnits->create([
     'title'          => 'My Unit',
-    'marketing_type' => 'BUY',      
+    'marketing_type' => 'BUY',
     'object_type'    => 'LIVING',
     'rs_type'        => 'APARTMENT',
     'custom_fields'  => [
